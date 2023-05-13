@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import { Loader, Card, FormField } from '../components';
 
 
@@ -17,7 +17,34 @@ const Home = () => {
 
   const [loading, setLoading] = useState(false);
   const [allPost, setAllPost] = useState(null);
-  const [searchText, setSearchText] = useState('')
+  const [searchText, setSearchText] = useState('');
+
+  useEffect( () =>{
+
+   const fetchPost= async() => {
+    setLoading(true);
+
+    try {
+      const respose = await fetch('http://localhost:8080/api/v1/post', {
+        method: 'GET',
+        headers:{
+          'Content-Type': 'application/json',
+        }
+      })
+      if(respose.ok) {
+        const result = await respose.json();
+        console.log(result)
+
+        setAllPost(result.data.reverse())
+      }
+    } catch (error) {
+      alert(error)
+    }finally{
+      setLoading(false)
+    }
+   }
+   fetchPost();
+  },[])
 
   return (
     <section className='max-w-7xl mx-auto'>
@@ -47,7 +74,7 @@ const Home = () => {
                   />
               ) : (
                 <RenderCrads 
-                  data={[]}
+                  data={allPost}
                   title= 'Posts not found'
                   />
               )}

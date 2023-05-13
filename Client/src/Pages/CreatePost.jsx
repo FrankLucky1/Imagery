@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { preview } from '../assets';
 
@@ -7,7 +7,7 @@ import {getRandomPrompt} from '../utils'
 
 const CreatePost = () => {
 
-  const Navigate = useNavigate();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: '',
     prompt: '',
@@ -19,9 +19,35 @@ const CreatePost = () => {
 
 
 
-  const handleSubmit = (e) => {
-    e.prevent.default()
-    console.log(form)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if(form.prompt && form.photo && form.name) {
+      setLoading(true)
+
+      try {
+        const response = await fetch('http://localhost:8080/api/v1/post', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(form)
+        })
+
+        await response.json();
+        navigate('/');
+        console.log(form);
+        console.log('submitted');
+
+      } catch (error) {
+        alert(error)
+      } finally{
+        setLoading(false)
+      }
+    } else{
+      alert('Please fill the form')
+    }
+  
   }
 
   const handleChange = (e) => {
@@ -34,13 +60,13 @@ const CreatePost = () => {
     setForm({...form, prompt: randomPrompt})
   }
 
-  const generateImage = async () => {
+  const generateImage = async () => { 
     if(form.prompt) {
       try {
         setGeneratingImg(true);
         const response = await fetch('http://localhost:8080/api/v1/dalle', 
         {
-          method: 'Post',
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
