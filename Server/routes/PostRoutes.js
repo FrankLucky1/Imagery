@@ -9,6 +9,7 @@ dotenv.config();
 
 const router = express.Router();
 
+
 //CONFIGURING CLOUDINARY
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

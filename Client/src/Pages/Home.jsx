@@ -17,7 +17,10 @@ const Home = () => {
 
   const [loading, setLoading] = useState(false);
   const [allPost, setAllPost] = useState(null);
+
   const [searchText, setSearchText] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+  const [searchTimeout, setSetSearchTimeout] = useState(null)
 
   useEffect( () =>{
 
@@ -46,6 +49,18 @@ const Home = () => {
    fetchPost();
   },[])
 
+  const handleSearchChange = (e) => {
+    clearTimeout(searchTimeout)
+    setSearchText(e.target.value);
+
+    setSetSearchTimeout(
+    setTimeout(() =>{
+      const searchResults =  allPost.filter((item) => item.name.toLowerCase().includes(searchText.toLocaleLowerCase()) || item.prompt.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()));
+
+      setSearchResults(searchResults)
+    }, 1000))
+  }
+
   return (
     <section className='max-w-7xl mx-auto'>
       <div>
@@ -54,7 +69,13 @@ const Home = () => {
       </div>
 
       <div className='mt-16'>
-        <FormField/>
+        <FormField 
+          labelName={'Search for a Post'}
+          name='text'
+          value={searchText}
+          type='text'
+          handleChange={handleSearchChange}
+          />
       </div>
 
       <div>
@@ -66,10 +87,10 @@ const Home = () => {
           {searchText && (
             <h2 className='font-medium text-[#666e75] text-xl mb-3'>Showing results for <span className='text-[#222328]'>{searchText}</span></h2>
           )}
-          <div className='grid lg:grid-col-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3 mt-4 '>
+          <div className='grid lg:grid-col-5 sm:grid-cols-4 xs:grid-cols-3 grid-cols-3 gap-3 mt-4 '>
               {searchText ? (
                 <RenderCrads 
-                  data={[]}
+                  data={searchResults}
                   title= 'no results found' 
                   />
               ) : (
