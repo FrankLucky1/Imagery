@@ -10,7 +10,7 @@ const App = () => {
       <header className='w-full flex justify-between items-center bg-white sm:px-8 px-4 py-4 border-b
       border-b-[#e6ebf4]  '>
         <Link to='/'>
-          <img src={logo} alt="logo"  className='object-contain w-28 '/>
+         <h1 className='text-2xl'> <span className='text-4xl text-purple-600 font-serif'>I</span>magery</h1>
         </Link>
         <Link to='/create' className='font-inter font-medium bg-[#6469ff] text-white px-4 py-4 rounded-md'>
           Create Post
